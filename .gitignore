@@ -1,0 +1,126 @@
+Python
+=========================
+
+pycache/
+*.py[cod]
+*$py.class
+*.so
+
+Virtual environments
+
+.venv/
+venv/
+env/
+ENV/
+
+Python packaging
+
+build/
+dist/
+*.egg-info/
+.eggs/
+
+=========================
+Environment / Secrets
+=========================
+
+.env
+.env.*
+!.env.example
+
+=========================
+IDEs / Editors
+=========================
+
+.vscode/
+.idea/
+*.iml
+
+=========================
+Jupyter Notebook
+=========================
+
+.ipynb_checkpoints/
+
+=========================
+Testing / Coverage
+=========================
+
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+=========================
+Type Checkers / Linters
+=========================
+
+.mypy_cache/
+.pyright/
+.ruff_cache/
+
+=========================
+Logs
+=========================
+
+*.log
+
+=========================
+OS Files
+=========================
+Windows
+
+Thumbs.db
+Desktop.ini
+
+macOS
+
+.DS_Store
+
+=========================
+Local Databases
+=========================
+
+*.sqlite
+*.sqlite3
+*.db
+
+=========================
+Large ML / AI Files
+=========================
+
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+*.gguf
+
+Model/cache directories
+
+models/
+model/
+.cache/
+huggingface/
+.huggingface/
+
+=========================
+Data
+=========================
+Uncomment these if your datasets should NOT be uploaded
+data/
+datasets/
+*.csv
+*.json
+=========================
+Temporary Files
+=========================
+
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
