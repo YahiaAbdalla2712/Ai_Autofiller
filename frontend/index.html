@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Form Builder</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>AI Form Builder</h1>
+        <p>Create your form and send its structure to the AI.</p>
+    </header>
+
+    <section class="builder">
+
+        <div class="section-header">
+            <h2>Form Fields</h2>
+            <button id="addFieldBtn">+ Add Field</button>
+        </div>
+
+        <div id="fieldsContainer"></div>
+
+        <div id="emptyState">
+            <p>No fields added yet.</p>
+            <p>Click <strong>+ Add Field</strong> to create your first field.</p>
+        </div>
+
+    </section>
+
+
+    <section class="preview">
+
+        <div class="section-header">
+            <h2>Generated JSON Schema</h2>
+            <button id="sendBtn">Send to AI</button>
+        </div>
+
+        <pre id="jsonPreview"></pre>
+
+    </section>
+
+
+    <section class="ai-section">
+
+        <h2>AI Input</h2>
+
+        <textarea
+            id="userMessage"
+            placeholder="Example: I want to register a transaction of 1,260,000 EGP"
+        ></textarea>
+
+        <button id="processBtn">
+            Process with AI
+        </button>
+
+    </section>
+
+
+    <section class="result">
+
+        <h2>AI Response</h2>
+
+        <pre id="aiResponse">
+Waiting for response...
+        </pre>
+
+    </section>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
