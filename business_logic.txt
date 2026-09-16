@@ -1,0 +1,301 @@
+# FACTORING COMPANY — BUSINESS RULES AND POLICIES
+
+Document Type: Internal Business Rules
+Version: 1.0
+Purpose: This document contains business rules used when evaluating and processing factoring transactions.
+
+1. CLIENT ELIGIBILITY
+
+---
+
+A client must be an officially registered business before entering into a factoring agreement.
+
+The minimum annual revenue required for standard factoring is 1,000,000 EGP.
+
+Businesses with annual revenue below 1,000,000 EGP require management approval before factoring can be offered.
+
+A client must have been operating for at least 12 months to qualify for standard factoring.
+
+Startups operating for less than 12 months require special approval from the Risk Department.
+
+2. INVOICE ELIGIBILITY
+
+---
+
+Invoices submitted for factoring must be valid commercial invoices issued to an approved debtor.
+
+The minimum invoice value eligible for factoring is 50,000 EGP.
+
+Invoices below 50,000 EGP require manual approval.
+
+An invoice must have a payment due date within 180 days from the invoice submission date.
+
+Invoices with a payment period longer than 180 days require Risk Department approval.
+
+Invoices that are already overdue are not eligible for standard factoring.
+
+An invoice must not have been previously assigned to another financial institution.
+
+3. ADVANCE RATE
+
+---
+
+The standard advance rate is 80% of the approved invoice value.
+
+For example, if an approved invoice has a value of 100,000 EGP, the standard initial advance is 80,000 EGP.
+
+The Risk Department may approve an advance rate between 70% and 90% depending on the debtor risk rating.
+
+Advance rates above 90% require executive approval.
+
+4. FACTORING FEES
+
+---
+
+The standard factoring service fee is 2% of the invoice value.
+
+For an invoice worth 100,000 EGP, the standard factoring fee is 2,000 EGP.
+
+Clients with a low-risk profile may receive a reduced service fee between 1% and 1.5%.
+
+Any service fee below 1% requires management approval.
+
+5. DISCOUNT RATE
+
+---
+
+The standard monthly discount rate is 2%.
+
+The discount is calculated based on the outstanding financed amount and the financing period.
+
+The final discount amount depends on the number of days between the financing date and the expected payment date.
+
+High-risk debtors may receive a monthly discount rate of up to 3%.
+
+A discount rate above 3% requires Risk Department approval.
+
+6. DEBTOR RISK CLASSIFICATION
+
+---
+
+Debtors are classified into three categories:
+
+LOW RISK:
+
+* Strong payment history
+* No significant payment delays
+* Established business relationship
+* Standard advance rate of 80% may be applied
+
+MEDIUM RISK:
+
+* Occasional payment delays
+* Moderate financial risk
+* Advance rate may be reduced to 75%
+* Risk Department review is required
+
+HIGH RISK:
+
+* Frequent payment delays
+* Significant financial concerns
+* Advance rate may be reduced to 70%
+* Risk Department approval is mandatory
+
+Debtors classified as prohibited are not eligible for factoring.
+
+7. PAYMENT TERMS
+
+---
+
+Standard payment terms are between 30 and 120 days.
+
+Payment terms between 121 and 180 days require additional risk assessment.
+
+Payment terms exceeding 180 days require Risk Department approval.
+
+Invoices with payment terms longer than 365 days are not eligible for standard factoring.
+
+8. CONCENTRATION LIMITS
+
+---
+
+A single debtor must not represent more than 30% of the total outstanding factoring portfolio for a client.
+
+If a debtor represents more than 30% of the portfolio, the transaction requires Risk Department approval.
+
+No single client may have more than 50% of its outstanding portfolio concentrated in one debtor without executive approval.
+
+9. REQUIRED DOCUMENTS
+
+---
+
+The following documents are required before a factoring transaction can be approved:
+
+* Valid commercial registration
+* Tax registration document
+* Valid identification documents for authorized representatives
+* Original or verified invoice
+* Purchase order or contract when applicable
+* Bank account information
+* Debtor information
+* Evidence of delivery or completion of the underlying transaction when required
+
+Missing mandatory documents prevent final transaction approval.
+
+10. APPROVAL AUTHORITY
+
+---
+
+Transactions with a total invoice value below 500,000 EGP can be approved by an authorized factoring officer if all standard requirements are satisfied.
+
+Transactions between 500,000 EGP and 2,000,000 EGP require Senior Risk Officer approval.
+
+Transactions above 2,000,000 EGP require executive approval.
+
+Any transaction involving a high-risk debtor requires Risk Department approval regardless of invoice value.
+
+11. OVERDUE INVOICES
+
+---
+
+An invoice is considered overdue when the debtor has not paid the invoice by its contractual due date.
+
+Invoices that are 1 to 30 days overdue require collection monitoring.
+
+Invoices that are 31 to 60 days overdue require escalation to the Collections Department.
+
+Invoices that are more than 60 days overdue require Risk Department review.
+
+Invoices that are more than 90 days overdue may result in suspension of additional financing for the client.
+
+12. CLIENT LIMIT
+
+---
+
+Each client receives a maximum approved financing limit.
+
+The initial financing limit is determined based on:
+
+* Client financial strength
+* Historical transaction volume
+* Debtor quality
+* Payment history
+* Existing outstanding exposure
+* Risk classification
+
+A client cannot receive financing that causes its total outstanding exposure to exceed its approved financing limit.
+
+Requests to increase the financing limit require a new risk assessment.
+
+13. TRANSACTION APPROVAL RULE
+
+---
+
+A factoring transaction may be approved only when:
+
+1. The client is eligible.
+
+2. The debtor is approved.
+
+3. The invoice is valid.
+
+4. The invoice has not previously been assigned.
+
+5. Required documents are available.
+
+6. The transaction does not exceed the client's financing limit.
+
+7. The transaction satisfies the applicable debtor concentration limit.
+
+8. The advance rate is within the authorized range.
+
+9. Required risk approvals have been obtained.
+
+10. EXAMPLE TRANSACTIONS
+
+---
+
+Example 1:
+
+Client: ABC Trading
+Invoice Value: 100,000 EGP
+Debtor Risk: Low
+Payment Terms: 60 days
+Standard Advance Rate: 80%
+Service Fee: 2%
+
+The transaction qualifies for standard factoring assuming all required documents are available.
+
+Example 2:
+
+Client: XYZ Manufacturing
+Invoice Value: 40,000 EGP
+Debtor Risk: Low
+Payment Terms: 60 days
+
+The transaction is below the minimum standard invoice value of 50,000 EGP.
+
+Manual approval is required.
+
+Example 3:
+
+Client: Delta Supplies
+Invoice Value: 1,500,000 EGP
+Debtor Risk: Medium
+Payment Terms: 150 days
+
+The transaction requires additional risk assessment because the payment period exceeds 120 days.
+
+The standard advance rate may be reduced to 75% because the debtor is classified as medium risk.
+
+Example 4:
+
+Client: Global Services
+Invoice Value: 3,000,000 EGP
+Debtor Risk: Low
+Payment Terms: 90 days
+
+The transaction exceeds 2,000,000 EGP and therefore requires executive approval.
+
+15. IMPORTANT BUSINESS RULE
+
+---
+
+The system must never assume that a missing business value is approved.
+
+If information required for approval is missing, the system must request the missing information rather than inventing a value.
+
+For example, if the debtor risk classification is unknown, the system must not automatically classify the debtor as low risk.
+
+The system should request the debtor risk classification or retrieve it from an approved company data source.
+
+16. TERMINOLOGY
+
+---
+
+Client:
+The business requesting factoring services.
+
+Debtor:
+The customer of the client who is responsible for paying the invoice.
+
+Invoice Value:
+The total monetary value of the invoice.
+
+Advance Rate:
+The percentage of the invoice value that is initially financed.
+
+Service Fee:
+The fee charged for providing the factoring service.
+
+Discount Rate:
+The financing cost applied to the outstanding financed amount.
+
+Outstanding Exposure:
+The total amount currently financed and not yet settled.
+
+Approved Financing Limit:
+The maximum outstanding financing amount authorized for a client.
+
+Risk Department:
+The department responsible for evaluating transactions that exceed standard risk parameters.

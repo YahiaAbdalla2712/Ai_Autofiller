@@ -23,6 +23,7 @@ addFieldBtn.addEventListener("click", () => {
         name: "",
         type: "string",
         description: "",
+        options: [],
         required: true,
         value:""
     };
@@ -120,6 +121,38 @@ function renderFields() {
 
                 </div>
 
+                <div class="options-section">
+                    <label>Allowed Options</label>
+
+                    <div id="options-${field.id}" class="options-list">
+                        ${field.options.map((option, index) => `
+                            <div class="option-row">
+                                <input
+                                    type="text"
+                                    value="${option}"
+                                    placeholder="Option ${index + 1}"
+                                    oninput="updateOption(${field.id}, ${index}, this.value)"
+                                >
+
+                                <button
+                                    type="button"
+                                    class="remove-option-btn"
+                                    onclick="removeOption(${field.id}, ${index})"
+                                >
+                                    Remove
+                                </button>
+                            </div>
+                        `).join("")}
+                    </div>
+
+                    <button
+                        type="button"
+                        class="add-option-btn"
+                        onclick="addOption(${field.id})"
+                    >
+                        + Add Option
+                    </button>
+                </div>
 
                 <div class="form-group">
 
@@ -139,7 +172,7 @@ function renderFields() {
                 </div>
 
             </div>
-
+            
 
             <div class="checkbox">
 
@@ -216,6 +249,14 @@ function generateSchema() {
         type: field.type,
         description: field.description
     };
+
+    const validOptions = field.options
+        .map(option => option.trim())
+        .filter(option => option !== "");
+
+    if (validOptions.length > 0){
+        properties[fieldName].enum = validOptions;
+    }    
 
     if (field.required) {
         required.push(fieldName);
@@ -328,3 +369,35 @@ processBtn.addEventListener("click", async () => {
     }
 
 });
+
+function addOption(fieldId) {
+    const field = fields.find(field => field.id === fieldId);
+
+    if(!field) return;
+
+    field.options.push("");
+
+    renderFields();
+    updateJSON();
+}
+
+function updateOption(fieldId, optionIndex, value){
+    const field = fields.find(field => field.id === fieldId);
+
+    if(!field) return;
+
+    field.options[optionIndex] = value;
+
+    updateJSON();
+}
+
+function removeOption(fieldId, optionIndex){
+    const field = fields.find(field => field.id === fieldId);
+
+    if(!field) return;
+
+    field.options.splice(optionIndex,1);
+
+    renderFields();
+    updateJSON();
+}
