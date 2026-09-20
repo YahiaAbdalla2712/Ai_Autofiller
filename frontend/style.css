@@ -177,3 +177,13 @@ pre {
     background: #16a34a;
     margin-top: 5px;
 }
+
+.numeric-range {
+    margin-top: 15px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}

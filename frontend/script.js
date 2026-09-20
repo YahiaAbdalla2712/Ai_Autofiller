@@ -24,6 +24,8 @@ addFieldBtn.addEventListener("click", () => {
         type: "string",
         description: "",
         options: [],
+        min: null,
+        max: null,
         required: true,
         value:""
     };
@@ -74,7 +76,7 @@ function renderFields() {
 
 
             <div class="form-row">
-
+                
                 <div class="form-group">
 
                     <label>Field Name</label>
@@ -94,7 +96,7 @@ function renderFields() {
                     <label>Type</label>
 
                     <select
-                        onchange="updateField(${field.id}, 'type', this.value)"
+                        onchange="updateFieldType(${field.id}, this.value)"
                     >
 
                         <option value="string"
@@ -117,43 +119,75 @@ function renderFields() {
                             Boolean
                         </option>
 
+                        <option value="list"
+                            ${field.type === "list" ? "selected" : ""}>
+                            List
+                        </option>    
+
                     </select>
 
                 </div>
 
-                <div class="options-section">
-                    <label>Allowed Options</label>
+                ${(field.type === "number" || field.type === "integer")?`
+                    <div class = "form-row numeric-range">
+                        <div class="form-group">
+                            <label>Minimum</label>
+                            <input
+                                type="number"
+                                value="${field.min ?? ""}"
+                                placeholder="Minimum value"
+                                oninput="updateField(${field.id},'min', this.value)"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Maximum</label>
+                            <input
+                                type="number"
+                                value="${field.max ??""}"
+                                placeholder="Maximum value"
+                                oninput="updateField(${field.id}, 'max', this.value)"
+                            >
+                        </div>    
+                    
+                    </div>    
+                    
+                     
+                `:""}
+                ${field.type === "list"?`
+                    <div class="options-section">
+                        <label>Allowed Options</label>
 
-                    <div id="options-${field.id}" class="options-list">
-                        ${field.options.map((option, index) => `
-                            <div class="option-row">
-                                <input
-                                    type="text"
-                                    value="${option}"
-                                    placeholder="Option ${index + 1}"
-                                    oninput="updateOption(${field.id}, ${index}, this.value)"
-                                >
+                        <div id="options-${field.id}" class="options-list">
+                            ${field.options.map((option, index) => `
+                                <div class="option-row">
+                                    <input
+                                        type="text"
+                                        value="${option}"
+                                        placeholder="Option ${index + 1}"
+                                        oninput="updateOption(${field.id}, ${index}, this.value)"
+                                    >
 
-                                <button
-                                    type="button"
-                                    class="remove-option-btn"
-                                    onclick="removeOption(${field.id}, ${index})"
-                                >
-                                    Remove
-                                </button>
-                            </div>
-                        `).join("")}
+                                    <button
+                                        type="button"
+                                        class="remove-option-btn"
+                                        onclick="removeOption(${field.id}, ${index})"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+                            `).join("")}
+                        </div>
+
+                        <button
+                            type="button"
+                            class="add-option-btn"
+                            onclick="addOption(${field.id})"
+                        >
+                            + Add Option
+                        </button>
                     </div>
-
-                    <button
-                        type="button"
-                        class="add-option-btn"
-                        onclick="addOption(${field.id})"
-                    >
-                        + Add Option
-                    </button>
-                </div>
-
+                ` : ""}
                 <div class="form-group">
 
                     <label>Description</label>
@@ -190,6 +224,7 @@ function renderFields() {
 
             </div>
 
+
         `;
 
         fieldsContainer.appendChild(fieldElement);
@@ -209,7 +244,12 @@ function updateField(id, property, value) {
 
     if (!field) return;
 
-    field[property] = value;
+    if (property === "min" || property === "max") {
+        field[property] = value === ""? null : Number(value);
+    }
+    else{
+        field[property] = value;
+    }
 
     updateJSON();
 }
@@ -246,20 +286,33 @@ function generateSchema() {
     const fieldName = field.name.trim().replace(/\s+/g, "_");
 
     properties[fieldName] = {
-        type: field.type,
+        type: field.type === "list" ? "string" : field.type,
         description: field.description
     };
 
-    const validOptions = field.options
-        .map(option => option.trim())
-        .filter(option => option !== "");
+    if(field.type === "list"){
 
-    if (validOptions.length > 0){
+        const validOptions = field.options
+            .map(option => option.trim())
+            .filter(option => option !== "");
+        if (validOptions.length > 0){
         properties[fieldName].enum = validOptions;
+        }
     }    
 
     if (field.required) {
         required.push(fieldName);
+    }
+
+    if (field.type === "number" || field.type === "integer") {
+        
+        if (field.min !== null) {
+            properties[fieldName].minimum = field.min;
+        }
+
+        if (field.max !== null) {
+            properties[fieldName].maximum = field.max;
+        }
     }
 
     });
@@ -397,6 +450,26 @@ function removeOption(fieldId, optionIndex){
     if(!field) return;
 
     field.options.splice(optionIndex,1);
+
+    renderFields();
+    updateJSON();
+}
+
+function updateFieldType(id, value) {
+    const field = fields.find(field => field.id === id);
+    
+    if(!field) return;
+
+    field.type = value;
+
+    if(value !== "number" && value !== "integer"){
+        field.min = null;
+        field.max = null;
+    }   
+
+    if (value !== "list") {
+        field.options = [];
+    }
 
     renderFields();
     updateJSON();

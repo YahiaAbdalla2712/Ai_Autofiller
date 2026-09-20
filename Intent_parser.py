@@ -101,22 +101,119 @@ def evaluate_business_rules(data:dict,business_rules_context:str)->list[dict]:
 
     return flags
 
-
+#to validate the value of the field if this field has definit choices
 def validate_enum_values(data: dict, schema: dict) -> dict:
     properties = schema.get("properties", {})
+    validation_messages = []
 
     for field, value in data.items():
-        field_schema = properties.get(field, {})
 
+        if field not in properties:
+            continue
+
+        field_schema = properties[field]
         allowed_values = field_schema.get("enum")
 
-        if allowed_values and value not in allowed_values:
+        if not allowed_values or value is None:
+            continue
+
+        if value not in allowed_values:
+            validation_messages.append(
+                {
+                    "field": field,
+                    "value": value,
+                    "message":(
+                        f"'{value}' is not a valid value for {field}."
+                        f"Allowed values are: {', '.join(allowed_values)}"
+                    )
+                }
+            )
             data[field] = None
 
-    return data        
+    return data, validation_messages       
+
+
+#to validate the value of the field if it is in range between min and max or not
+def validate_numeric_ranges(data: dict, schema: dict) -> dict:
+    properties = schema.get("properties",{})
+    validation_messages = []
+
+    for field, value in data.items():
+
+        if field not in properties:
+            continue
+
+        field_schema = properties[field]
+        field_type = field_schema.get("type")
+
+        if field_type not in ("number", "integer"):
+            continue
+
+        if value is None:
+            continue
+
+        #convert strings into numbers (integers or float)
+        if isinstance(value, str):
+            try:
+                if field_type == "integer":
+                    value = int(value)
+                else:
+                    value = float(value)
+
+                data[field] = value
+
+            except ValueError:
+                validation_messages.append(
+                    {
+                        "field": field,
+                        "value": value,
+                        "message":(
+                            f"'{value}' is not a valid {field_type}"
+                            f"value for '{field}'."
+                        )
+                    }
+                )
+
+                data[field] = None
+                continue            
+
+        minimum = field_schema.get("minimum")
+        maximum = field_schema.get("maximum")
+
+        if minimum is not None and value < minimum:
+            validation_messages.append(
+                {
+                    "field": field,
+                    "value": value,
+                    "message":(
+                        f"The value if '{field}' must be at least "
+                        f"{minimum}. You provided {value}."
+                    )
+                }
+            )
+
+            data[field] = None
+            continue
+
+        if maximum is not None and value > maximum:
+            validation_messages.append(
+                {
+                    "field": field,
+                    "value": value,
+                    "message":(
+                        f"The value if '{field}' must be at most "
+                        f"{maximum}. You provided {value}."
+                    )
+                }
+            )
+            data[field] = None
+            continue
+
+    return data, validation_messages
 
 def run_intent_parser(user_input:str,current_data:dict,schema:dict,history:list[dict] = None):
     history = history or []
+    validation_messages = []
 
     business_rules_context = get_buisness_rules_context(user_input, current_data)
 
@@ -143,17 +240,38 @@ def run_intent_parser(user_input:str,current_data:dict,schema:dict,history:list[
 
         If the user does not provide a value, output null for that field.
 
-        If a field has a predefined set of allowed options in the schema, the user's input must exactly match one of those allowed options,
-        If the user provides a value that is not one of the allowed options, output null for that field, Never substitute, normalize, 
-        or infer a different allowed value unless it is giving the same meaning, 
-        Example:
-        If there is a field named employment type and you have only 3 options [full-time, part-time, contract]
-        then: 
-        - if user inputs full-time then the value of the field is full-time.
-        - if user inputs part-time then the value of the field is part-time.
-        - if user inputs contract then the value of the field is contract. 
-        - if user inputs week by week the value of the field is part-time.
-        - if user inputs freelancing the value of the field is null.
+        IMPORTANT FIELD VALIDATION RULE:
+
+        If the user explicitly mentions a field in their message, you MUST include that
+        field in your output, even if the value is invalid.
+
+        If the value does not satisfy the field's schema constraints, return null.
+
+        For example, if:
+
+        employment_type:
+        enum = ["full-time", "part-time", "contract"]
+
+        and the user says:
+
+        "my employment type is freelancing"
+
+        you MUST return:
+
+        {{
+            "employment_type": null
+        }}
+
+        Do NOT omit the field.
+
+        If the user does not mention a field at all, you may omit that field from
+        the current extraction.
+
+        This distinction is important:
+
+        - Field not mentioned -> omit the field
+        - Field mentioned with valid value -> return the value
+        - Field mentioned with invalid value -> return null
 
         Previous values:
         - If a value already exists in current_data/history, preserve it.
@@ -190,15 +308,15 @@ def run_intent_parser(user_input:str,current_data:dict,schema:dict,history:list[
 
     data = json.loads(response.content)
 
-    data = validate_enum_values(data, schema)
+    data, enum_messages = validate_enum_values(data, schema)
+    validation_messages += enum_messages
+
+    data, numeric_messages = validate_numeric_ranges(data, schema)
+    validation_messages += numeric_messages
     
     updated_data = {
         **current_data,
-        **{
-            key: value 
-            for key, value in data.items()
-            if not is_missing(value)
-        }
+        **data
     }
 
     missing = get_missing_fields(updated_data,schema)
@@ -209,6 +327,7 @@ def run_intent_parser(user_input:str,current_data:dict,schema:dict,history:list[
         "data": updated_data,
         "missing_fields": missing,
         "complete": len(missing) == 0,
+        "validation_messages": validation_messages,
         "business_rule_flags": business_rule_flags
     }
 
