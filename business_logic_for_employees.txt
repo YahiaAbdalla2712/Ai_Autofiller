@@ -1,0 +1,352 @@
+EMPLOYEE ONBOARDING BUSINESS RULES
+
+Purpose:
+These rules define the company's business logic for validating employee onboarding information. The system must use these rules only to evaluate values explicitly provided by the user. Business rules must never be used to invent, assume, or fill missing form fields.
+
+==================================================
+1. REQUIRED EMPLOYEE INFORMATION
+==================================================
+
+The following fields are required for employee onboarding:
+
+- fullName
+- department
+- jobTitle
+- employmentType
+- startDate
+
+The following fields are optional:
+
+- dateOfBirth
+- salary
+- workEmail
+- phoneNumber
+- city
+
+If a required field is missing, the employee onboarding record is incomplete.
+
+Do not use business rules to generate or assume a missing required value.
+
+==================================================
+2. FULL NAME RULES
+==================================================
+
+The employee must provide a full name.
+
+The full name should contain at least a first name and a family/last name.
+
+A single name is not considered a complete full name unless company policy explicitly allows single-name employees.
+
+The system must not invent or complete a person's name.
+
+==================================================
+3. DEPARTMENT RULES
+==================================================
+
+The employee's department must be one of the company's approved departments:
+
+- Sales
+- Marketing
+- Finance
+- HR
+- Engineering
+
+If the user provides a department outside this list, the department is invalid.
+
+Do not automatically assign an employee to a department based on their job title.
+
+Example:
+"Software Engineer" does not automatically mean Engineering unless the user explicitly provides Engineering.
+
+==================================================
+4. JOB TITLE RULES
+==================================================
+
+The employee must provide a job title.
+
+The job title is free text and must not be inferred from the department.
+
+Example:
+Department = Engineering does not automatically mean Software Engineer.
+
+If the job title is not provided, leave it missing.
+
+==================================================
+5. EMPLOYMENT TYPE RULES
+==================================================
+
+The employee's employment type must be one of:
+
+- Full-time
+- Part-time
+- Contract
+- Intern
+
+If the user explicitly provides an employment type that is not one of these values, the value is invalid.
+
+Examples of invalid values:
+
+- Freelancing
+- Temporary
+- Permanent
+- Freelancer
+
+Do not automatically convert "freelancing" into "Contract" unless the company explicitly defines that mapping.
+
+Allowed equivalent wording may be normalized when the meaning is unambiguous.
+
+Examples:
+
+"full time" -> "Full-time"
+"part time" -> "Part-time"
+"full-time employee" -> "Full-time"
+"part-time employee" -> "Part-time"
+
+==================================================
+6. START DATE RULES
+==================================================
+
+The employee must provide a start date.
+
+The start date must be a valid calendar date.
+
+The system must not invent a start date.
+
+If the user provides a natural-language date, it may be normalized to a standard date format.
+
+Example:
+
+"October 1, 2026" -> "2026-10-01"
+
+The system must not change the date unless the user explicitly provides a correction.
+
+==================================================
+7. DATE OF BIRTH RULES
+==================================================
+
+Date of birth is optional.
+
+If provided, it must be a valid calendar date.
+
+The date of birth must be earlier than the employee's start date.
+
+The date of birth must not be in the future.
+
+The system must not calculate or invent a date of birth when it is not provided.
+
+==================================================
+8. SALARY RULES
+==================================================
+
+Salary is optional.
+
+If salary is provided, it must be a positive numeric value.
+
+Salary must be greater than 0.
+
+Salary below 5,000 is considered below the company's standard minimum salary threshold and requires HR review.
+
+Salary between 5,000 and 50,000 is within the standard salary range.
+
+Salary above 50,000 requires HR management approval.
+
+Do not assign a salary when the user does not provide one.
+
+Do not use the department or job title to estimate salary.
+
+Example:
+
+Engineering + Software Engineer does NOT imply a particular salary.
+
+==================================================
+9. WORK EMAIL RULES
+==================================================
+
+Work email is optional.
+
+If provided, it must be a valid email address.
+
+The work email should use the company's approved corporate email domain:
+
+@company.com
+
+An email using another domain requires HR review.
+
+Example:
+
+ahmed.mohamed@company.com -> valid corporate email
+
+ahmed.mohamed@gmail.com -> requires HR review
+
+The system must not invent an email address.
+
+==================================================
+10. PHONE NUMBER RULES
+==================================================
+
+Phone number is optional.
+
+If provided, it must contain a valid phone number.
+
+Egyptian mobile numbers should normally contain 11 digits and begin with 01.
+
+Examples of valid prefixes include:
+
+- 010
+- 011
+- 012
+- 015
+
+A phone number that does not follow the expected Egyptian mobile format requires validation.
+
+The system must not invent or modify a phone number unless normalization is explicitly required.
+
+==================================================
+11. CITY RULES
+==================================================
+
+City is optional.
+
+If provided, it must represent a valid city.
+
+The system must not infer the employee's city from their phone number, department, email, or other information.
+
+Example:
+
+A phone number beginning with 010 does not determine the employee's city.
+
+==================================================
+12. CROSS-FIELD BUSINESS RULES
+==================================================
+
+The following rules evaluate relationships between fields.
+
+1. Date of birth must be earlier than start date.
+
+2. Employee must be at least 18 years old at the start date.
+
+3. If employment type is Intern, HR review is required.
+
+4. If salary is below 5,000, HR review is required.
+
+5. If salary is above 50,000, HR management approval is required.
+
+6. If work email does not use @company.com, HR review is required.
+
+7. If the employee's department is Engineering and the job title contains "Engineer", the information is consistent but no additional approval is required.
+
+8. Department and job title must still be independently provided. One must not be inferred from the other.
+
+==================================================
+13. APPROVAL RULES
+==================================================
+
+HR review is required when:
+
+- Salary is below 5,000.
+- Employment type is Intern.
+- Work email does not use @company.com.
+- Other explicitly defined HR validation conditions are triggered.
+
+HR management approval is required when:
+
+- Salary is above 50,000.
+
+If no approval condition is triggered, no additional approval is required.
+
+==================================================
+14. MISSING INFORMATION RULE
+==================================================
+
+Business rules must NEVER fill missing form fields.
+
+For example:
+
+If salary is missing, do not assign 5,000 because it is the minimum salary.
+
+If department is missing, do not assign Engineering because the job title is Software Engineer.
+
+If employment type is missing, do not assume Full-time.
+
+If city is missing, do not infer Cairo from other information.
+
+Missing values must remain missing.
+
+==================================================
+15. VALIDATION VS EXTRACTION
+==================================================
+
+The system has two separate responsibilities:
+
+1. Data extraction:
+Extract values explicitly provided by the user.
+
+2. Business validation:
+Evaluate the extracted values against these business rules.
+
+Business rules may flag problems, approvals, or inconsistencies, but they must never create values that the user did not provide.
+
+==================================================
+16. EXAMPLE EVALUATION
+==================================================
+
+Input:
+
+Full Name:
+Ahmed Mohamed
+
+Department:
+Engineering
+
+Job Title:
+Software Engineer
+
+Employment Type:
+Full-time
+
+Start Date:
+October 1, 2026
+
+Date of Birth:
+May 15, 2000
+
+Salary:
+15,000
+
+Work Email:
+ahmed.mohamed@company.com
+
+Phone Number:
+01812345678
+
+City:
+Cairo
+
+Evaluation:
+
+- Full name: valid.
+- Department: valid because Engineering is an approved department.
+- Job title: provided.
+- Employment type: valid because Full-time is an approved employment type.
+- Start date: valid.
+- Date of birth: valid because it is before the start date and the employee is over 18 at the start date.
+- Salary: valid and within the standard salary range.
+- Work email: valid corporate email.
+- Phone number: not a valid Egyptian mobile number format.
+- City: provided.
+- HR review: not required.
+- HR management approval: not required.
+
+Overall business evaluation:
+
+The provided employee information satisfies the defined onboarding business rules.
+
+==================================================
+17. IMPORTANT SYSTEM RULE
+==================================================
+
+Never use these business rules to invent, guess, default, or complete employee information.
+
+Business rules are for VALIDATION and EVALUATION only.
+
+The user-provided values and the form schema are the source of truth for form data.

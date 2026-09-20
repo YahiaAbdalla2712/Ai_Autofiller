@@ -39,8 +39,15 @@ def get_buisness_rules_context(user_input: str, current_data: dict) -> str:
     Fetch buisness rules relevant to the current turn and render them as plain text context for the prompt.
     this replaces exposing retrieve_buisness_rules as a callable tool to the model.
     """
+    print("\n ---------- Entered business rules retrieval")
+    print("user input:", user_input)
+    print("current data:", current_data)
     try:
         rules = retrieve_business_rules(user_input)
+
+        print("\nRAW RETRIEVAL RESULT:")
+        print(repr(rules))
+        print("RESULT TYPE:",type(rules))
     except Exception as e:
         return f"(business rules lookup failed: {e})"
 
@@ -75,30 +82,54 @@ def evaluate_business_rules(data:dict,business_rules_context:str)->list[dict]:
         identify which rules (if any) apply to this data and what action
         each one requires. DO NOT modify or add to the data itself.
 
+        IMPORTANT:
+        - Only evaluate values explicitly present in the extracted data.
+        - Do not invent missing values.
+        - Do not modify the extracted data.
+        - Do not create values for missing fields.
+        - If a rule is triggered, add it to business_rule_flags.
+        - If no rule is triggered, return an empty business_rule_flags list.
+
         Extreacted data:
         {json.dumps(data, indent=2)}
 
         Business rules:
         {business_rules_context}
 
-        Respond with ONLY a JSON array. Each element:
-        {{"rule":"<short description of the rule that applies>","action_required": "<what must happen>"}}
+        Respond with ONLY a JSON object:
+        {{
+            "business_rule_flags":[
+                {{
+                    "rule": "short description of the triggered rule",
+                    "action_required": "what must happen"
+                }}
+            ]
+        }}
 
-        If no rules apply, respond with an empty array: []
+        If no business rules are triggered:
+        {{
+            "business_rule_flags": []
+        }}
+        
 
     """
     llm = ChatOllama(model=MODEL, temperature=0, format="json")
-    response = llm.invoke([SystemMessage(content=EVAL_PROMPT)])
+    response = llm.invoke([SystemMessage(content="You are a business-rule comliance checker"), HumanMessage(content=EVAL_PROMPT)])
 
     try:
-        flags = json.loads(response.content)
+        result = json.loads(response.content)
 
     except (json.JSONDecodeError,TypeError):
         return []
 
-    if not isinstance(flags, list):
+    if not isinstance(result, dict):
         return []
 
+    flags = result.get("business_rule_flags", [])
+
+    if not isinstance(flags, list):
+        return []
+    
     return flags
 
 #to validate the value of the field if this field has definit choices
